@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 
-	"github.com/JessicaDiehl/loja-digiport-backend/model"
+	"github.com/JessicaDiehl/loja-backend/model"
 )
 
 var produtos []model.Produto = []model.Produto{}

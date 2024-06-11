@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/JessicaDiehl/loja-digiport-backend/model"
+	"github.com/JessicaDiehl/loja-backend/model"
 )
 
 func StartServer() {
