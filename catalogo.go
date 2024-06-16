@@ -30,3 +30,23 @@ func registraProduto(produtoNovo model.Produto) error {
 	produtos = append(produtos, produtoNovo)
 	return nil
 }
+
+func atualizaProduto(produtoAtualizado model.Produto) error {
+    for i, produto := range produtos {
+        if produto.Id == produtoAtualizado.Id {
+            produtos[i] = produtoAtualizado
+            return nil
+        }
+    }
+    return errors.New("produto não encontrado")
+}
+
+func removeProduto(id string) error {
+    for i, produto := range produtos {
+        if produto.Id == id {
+            produtos = append(produtos[:i], produtos[i+1:]...)
+            return nil
+        }
+    }
+    return errors.New("produto não encontrado")
+}
