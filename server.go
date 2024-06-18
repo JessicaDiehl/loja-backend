@@ -13,7 +13,7 @@ func StartServer() {
   	http.HandleFunc("/carrinhos/{id}", getCarrinho).Methods("GET")
   	http.HandleFunc("/carrinhos/{id}", updateCarrinho).Methods("PUT")
   	http.HandleFunc("/carrinhos/{id}", deleteCarrinho).Methods("DELETE")
-	http.HandleFunc("/usuario", createUsuario).Methods("POST")
+	http.HandleFunc("/usuarios", createUsuario).Methods("POST")
         http.HandleFunc("/login", loginUsuario).Methods("POST")
 	http.ListenAndServe(":8080", nil)
 }
