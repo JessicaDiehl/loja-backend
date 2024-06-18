@@ -13,6 +13,8 @@ func StartServer() {
   	http.HandleFunc("/carrinhos/{id}", getCarrinho).Methods("GET")
   	http.HandleFunc("/carrinhos/{id}", updateCarrinho).Methods("PUT")
   	http.HandleFunc("/carrinhos/{id}", deleteCarrinho).Methods("DELETE")
+	http.HandleFunc("/usuario", createUsuario).Methods("POST")
+        http.HandleFunc("/login", loginUsuario).Methods("POST")
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -115,4 +117,48 @@ func deleteCarrinho(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func createUsuario(w http.ResponseWriter, r *http.Request) {
+	var novoUsuario model.Usuario
+	_ = json.NewDecoder(r.Body).Decode(&novoUsuario)
+
+	// Gerar um ID aleatório para o usuário
+	novoUsuario.Id = strconv.Itoa(rand.Intn(1000000))
+
+	// Hash da senha do usuário
+	hashedSenha, err := hashSenha(novoUsuario.Senha)
+	if err != nil {
+			http.Error(w, "Erro ao hashear a senha", http.StatusInternalServerError)
+			return
+	}
+	novoUsuario.Senha = hashedSenha
+
+	// Armazenar o novo usuário
+	mutex.Lock()
+	usuarios[novoUsuario.Email] = novoUsuario
+	mutex.Unlock()
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(novoUsuario)
+}
+
+func loginUsuario(w http.ResponseWriter, r *http.Request) {
+	var credenciais struct {
+			Email string `json:"email"`
+			Senha string `json:"senha"`
+	}
+	_ = json.NewDecoder(r.Body).Decode(&credenciais)
+
+	mutex.Lock()
+	usuario, ok := usuarios[credenciais.Email]
+	mutex.Unlock()
+
+	if !ok || !verificaSenha(usuario.Senha, credenciais.Senha) {
+			http.Error(w, "Email ou senha inválidos", http.StatusUnauthorized)
+			return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(usuario)
 }
