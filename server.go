@@ -14,6 +14,12 @@ func StartServer() {
   	http.HandleFunc("/carrinhos/{id}", updateCarrinho).Methods("PUT")
   	http.HandleFunc("/carrinhos/{id}", deleteCarrinho).Methods("DELETE")
 	http.HandleFunc("/usuarios", createUsuario).Methods("POST")
+	http.HandleFunc("/wishlist", createItemWishlist).Methods("POST")
+    http.HandleFunc("/wishlist", getItemsWishlist).Methods("GET")
+    http.HandleFunc("/wishlist/{id}", deleteItemWishlist).Methods("DELETE")
+
+    http.HandleFunc("/pagamento", createPagamento).Methods("POST")
+    http.HandleFunc("/pagamento/{id}", getPagamento).Methods("GET")
         http.HandleFunc("/login", loginUsuario).Methods("POST")
 	http.ListenAndServe(":8080", nil)
 }
